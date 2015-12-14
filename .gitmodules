@@ -1,0 +1,3 @@
+[submodule "assets/tapmenu"]
+	path = assets/tapmenu
+	url = https://github.com/trustedanalytics/ipython-tapmenu.git
