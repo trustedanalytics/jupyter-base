@@ -18,7 +18,8 @@ ENV no_proxy "$NO_PROXY"
 
 RUN apt-get update  --fix-missing 
 RUN apt-get -y install software-properties-common
-RUN add-apt-repository -y  ppa:saiarcot895/myppa && apt-get update
+RUN add-apt-repository ppa:saiarcot895/myppa
+RUN apt-get update
 RUN apt-get install -y apt-fast  &&  apt-fast upgrade -y
 RUN apt-fast install -y build-essential dpkg-dev zlib1g zlib1g-dev libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev vim gfortran libopenblas-dev liblapack-dev
 
