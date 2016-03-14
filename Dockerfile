@@ -1,19 +1,20 @@
 FROM ubuntu:14.04
 
+# Setup ENVs variables and ARGs
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 RUN locale-gen en_US en_US.UTF-8
 ENV dpkg-reconfigure locales
-ENV HTTP_PROXY http://proxy.jf.intel.com:911
-ENV HTTPS_PROXY http://proxy.jf.intel.com:912
-ENV http_proxy http://proxy.jf.intel.com:911
-ENV https_proxy http://proxy.jf.intel.com:912
-ENV no_proxy hf.intel.com,jf.intel.com,stash-fm-prod.devtools.intel.com,192.168.0.0/16,localhost,10.54.4.50,stash01.devtools.intel.com,devtools.intel.com,github.intel.com
-ENV NO_PROXY hf.intel.com,jf.intel.com,stash-fm-prod.devtools.intel.com,192.168.0.0/16,localhost,10.54.4.50,stash01.devtools.intel.com,devtools.intel.com,github.intel.com
-ENV SOCKS_PROXY socks://proxy-socks.jf.intel.com:1080
-ENV socks_proxy socks://proxy-socks.jf.intel.com:1080
+ARG HTTP_PROXY ""
+ARG HTTPS_PROXY ""
+ARG SOCKS_PROXY ""
+ARG NO_PROXY "localhost"
+ENV http_proxy "$HTTP_PROXY"
+ENV https_proxy "HTTPS_PROXY"
+ENV socks_proxy "$SOCKS_PROXY"
+ENV no_proxy "$NO_PROXY"
 
 RUN apt-get update  --fix-missing 
 RUN apt-get -y install software-properties-common
@@ -55,6 +56,5 @@ RUN pip2.7 install -U numpy &&  pip2.7 install -U jupyter scipy
 RUN pip2.7 install -r $HOME/requirements.txt &&  mkdir -p /home/tap/.jupyter/nbconfig
 WORKDIR $HOME 
 RUN jupyter-nbextension install --user tapmenu  && jupyter-nbextension enable tapmenu/main 
-
 
 ENTRYPOINT ["/home/tap/run.sh"]
