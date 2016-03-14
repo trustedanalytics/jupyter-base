@@ -7,10 +7,10 @@ ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 RUN locale-gen en_US en_US.UTF-8
 ENV dpkg-reconfigure locales
-ARG HTTP_PROXY ""
-ARG HTTPS_PROXY ""
-ARG SOCKS_PROXY ""
-ARG NO_PROXY "localhost"
+ARG HTTP_PROXY 
+ARG HTTPS_PROXY 
+ARG SOCKS_PROXY
+ARG NO_PROXY 
 ENV http_proxy "$HTTP_PROXY"
 ENV https_proxy "HTTPS_PROXY"
 ENV socks_proxy "$SOCKS_PROXY"
