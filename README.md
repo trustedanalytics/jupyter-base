@@ -1,7 +1,6 @@
 # jupyter-container
 A Ubuntu:14.04 container for running a local install of Python(2.7.10) and Jupyter.
 
-
 An entry point has been set that will automatically start the notebook server. If you want to set any **jupyter notebook** CLI options assign them to the **IPYTHON_OPTS** env variable.
 
 example build:
