@@ -1,13 +1,14 @@
 #/bin/bash
 
-IFS=$'\n'
-for dep in ` cat deps.links `
+echo 
+cat deps.links | while read dep 
 do
-	
-	link=$(echo $dep | awk '{print $1}')
-
 	name=$(echo $dep | awk '{print $2}')
 
- 	wget $link  -O  assets/$name
+	if [ ! -f "assets/$name" ]; then
 
+		link=$(echo $dep | awk '{print $1}')
+
+	 	wget $link  -O  assets/$name
+	fi
 done
