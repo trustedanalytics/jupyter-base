@@ -1,4 +1,5 @@
 FROM ubuntu:14.04
+
 ARG PYTHON_VERSION=2.7.10
 
 # Setup ENVs variables and ARGs
@@ -8,7 +9,6 @@ ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 RUN locale-gen en_US en_US.UTF-8
 ENV dpkg-reconfigure locales
-
 
 RUN apt-get update  --fix-missing 
 RUN apt-get -y install software-properties-common
@@ -21,8 +21,8 @@ RUN useradd -m -d /home/tap tap
 ENV HOME /home/tap
 
 #add all files before switching users
+
 ADD assets/Python-$PYTHON_VERSION.tar.xz  $HOME
-RUN ls -la $HOME/
 ADD assets/get-pip.py $HOME/
 ADD assets/requirements.txt $HOME/
 ADD assets/tapmenu/ $HOME/tapmenu
