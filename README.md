@@ -1,9 +1,15 @@
 # jupyter-container
 A Ubuntu:14.04 container for running a local install of Python(2.7.10) and Jupyter.
 
+
 An entry point has been set that will automatically start the notebook server. If you want to set any **jupyter notebook** CLI options assign them to the **IPYTHON_OPTS** env variable.
 
-example:
+example build:
+```
+docker build --build-arg HTTP_PROXY=$http_proxy --build-arg HTTPS_PROXY=$http_proxy --build-arg NO_PROXY=$no_proxy --build-arg http_proxy=$http_proxy --build-arg https_proxy=$http_proxy --build-arg no_proxy=$no_proxy --build-arg PYTHON_VERSION=2.7.10 .
+```
+
+example run:
 ```
 docker run  --env IPYTHON_OPTS="--ip='*' " -p 8889:8888  tapatk/jupyter
 ```
