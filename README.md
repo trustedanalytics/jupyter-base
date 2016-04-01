@@ -25,10 +25,8 @@ The following package are pre-installed:
 - decorator>=3.4.0
 - pandas>=0.15.0
 - pymongo>=3.0
-- networkx>=1.10
 - matplotlib>=1.4.3
 - jupyter>=1.0.0
 - scipy>=0.14
 - scikit-learn>=0.15
-- nose>=0.10.0
 

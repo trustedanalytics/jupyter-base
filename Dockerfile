@@ -64,7 +64,7 @@ COPY assets/requirements.txt $HOME/
 COPY assets/tapmenu/ $HOME/tapmenu
 RUN mkdir -p $HOME/jupyter && ls -la $HOME
 COPY assets/README.ipynb $HOME/jupyter/README.ipynb
-COPY assets/run.sh $HOME/
+COPY assets/TAP_13385739.png $HOME/
 RUN chown -R tap:users $HOME && chmod 400 $HOME/jupyter/README.ipynb
 
 # Install TrustedAnalytics Clien dependencies and install the helper notebook
