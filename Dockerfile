@@ -33,9 +33,20 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.9.0/tini &
 ENV SHELL /bin/bash
 ENV NB_USER tap
 ENV NB_UID 1000
-RUN useradd -m -s /bin/bash -d /home/$NB_USER -N -u $NB_UID $NB_USER 
+RUN useradd -m -s /bin/bash -d /home/$NB_USER -N -u $NB_UID $NB_USER
+ENV CONDA_DIR /opt/anaconda2
+RUN mkdir -p $CONDA_DIR && chown $NB_USER $CONDA_DIR
 
 USER $NB_USER
+# Download and Install Anaconda2
+RUN cd /tmp && \
+    wget --quiet https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda2-4.0.0-Linux-x86_64.sh && \
+    echo "ae312143952ca00e061a656c2080e0e4fd3532721282ba8e2978177cad71a5f0 *Anaconda2-4.0.0-Linux-x86_64.sh" | sha256sum -c - && \
+    bash Anaconda2-4.0.0-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Anaconda2-4.0.0-Linux-x86_64.sh
+
+ENV PATH $CONDA_DIR/bin:$PATH
+   
 # Setup tap home directory
 RUN mkdir /home/$NB_USER/work && \
     mkdir /home/$NB_USER/.jupyter && \
@@ -45,32 +56,6 @@ RUN mkdir /home/$NB_USER/work && \
 ENV HOME /home/$NB_USER
 
 USER root
-# Install modern pip then kernel gateway
-RUN apt-get update && \
-    apt-get install -yq --no-install-recommends \
-        python-dev libblas-dev liblapack-dev libatlas-base-dev gfortran python-setuptools \
-        python-scipy python-matplotlib \
-        python-setuptools python-dev \
-        python3-dev python3-setuptools && \
-    easy_install pip && \
-    easy_install3 pip && \
-    pip2.7 install jupyter_kernel_gateway==0.3.1 && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy all files before switching users
-COPY assets/requirements.txt $HOME/
-COPY assets/tapmenu/ $HOME/tapmenu
-RUN mkdir -p $HOME/jupyter && ls -la $HOME
-COPY assets/README.ipynb $HOME/jupyter/README.ipynb
-COPY assets/TAP_13385739.png $HOME/
-RUN chown -R tap:users $HOME && chmod 400 $HOME/jupyter/README.ipynb
-
-# Install TrustedAnalytics Clien dependencies and install the helper notebook
-RUN pip2.7 install -r $HOME/requirements.txt &&  mkdir -p $HOME/.jupyter/nbconfig
-RUN jupyter-nbextension install $HOME/tapmenu  && jupyter-nbextension enable tapmenu/main 
-
 # Configure container startup
 EXPOSE 8888
 WORKDIR $HOME/jupyter
@@ -80,5 +65,20 @@ RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter
 ENTRYPOINT ["tini", "--"]
 CMD ["start-notebook.sh"]
 
+# Copy all files before switching users
+COPY assets/requirements.txt $HOME/
+COPY assets/tapmenu/ $HOME/tapmenu
+RUN mkdir -p $HOME/jupyter && ls -la $HOME
+COPY assets/README.ipynb $HOME/jupyter/README.ipynb
+COPY assets/TAP_13385739.png $HOME/
+RUN chown -R $NB_USER:users $HOME && chmod 400 $HOME/jupyter/README.ipynb
+RUN jupyter-nbextension install $HOME/tapmenu  && jupyter-nbextension enable tapmenu/main 
+
 USER $NB_USER
+
+RUN conda clean -y --all && \
+    conda install pip && \
+    pip install trustedanalytics
+
+RUN mkdir -p $HOME/.jupyter/nbconfig
 
