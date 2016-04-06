@@ -1,5 +1,13 @@
-# jupyter-container
-A Ubuntu:14.04 container for running a local install of Python(2.7.10) and Jupyter.
+
+#jupyter-base
+
+Docker image for Jupyter on TAP.
+
+Two images are used:
+- jupyter-base (this project) - includes the parts that rarely change, e.g. 3rd party libraries
+- jupyter - includes most of our customizations and is layered on top of the jupyter-base
+
+The image was split into two parts for faster builds and deploys.
 
 An entry point has been set that will automatically start the notebook server. If you want to set any **jupyter notebook** CLI options assign them to the **IPYTHON_OPTS** env variable.
 
