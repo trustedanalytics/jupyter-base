@@ -69,9 +69,7 @@ CMD ["start-notebook.sh"]
 COPY assets/requirements.txt $HOME/
 COPY assets/tapmenu/ $HOME/tapmenu
 RUN mkdir -p $HOME/jupyter && ls -la $HOME
-COPY assets/README.ipynb $HOME/jupyter/README.ipynb
 COPY assets/TAP_13385739.png $HOME/
-RUN chown -R $NB_USER:users $HOME && chmod 400 $HOME/jupyter/README.ipynb
 RUN jupyter-nbextension install $HOME/tapmenu  && jupyter-nbextension enable tapmenu/main 
 
 USER $NB_USER
