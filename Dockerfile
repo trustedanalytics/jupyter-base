@@ -1,5 +1,6 @@
 FROM debian:stable
-
+ADD assets/delta_source.sh /tmp/
+RUN /tmp/delta_source.sh
 ENV DEBIAN_FRONTEND noninteractive
 
 ARG PYTHON_VERSION=2.7.10
@@ -36,7 +37,6 @@ RUN \
     DEBIAN_FRONTEND=noninteractive  apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default  && \
     echo "===> clean up..."  && \
     rm -rf /var/cache/oracle-jdk8-installer  && \
-    apt-get clean  && \
     rm -rf /var/lib/apt/lists/*
 
 
@@ -98,4 +98,6 @@ RUN conda clean -y --all && \
     pip install trustedanalytics
 
 RUN mkdir -p $HOME/.jupyter/nbconfig
-
+USER root
+RUN /tmp/delta_source.sh
+USER $NB_USER
