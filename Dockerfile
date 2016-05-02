@@ -69,8 +69,10 @@ CMD ["start-notebook.sh"]
 COPY assets/requirements.txt $HOME/
 COPY assets/tapmenu/ $HOME/tapmenu
 RUN mkdir -p $HOME/jupyter && ls -la $HOME
-COPY assets/TAP_13385739.png $HOME/
 RUN jupyter-nbextension install $HOME/tapmenu  && jupyter-nbextension enable tapmenu/main 
+
+# This logo gets displayed within our default notebooks
+COPY assets/TAP-logo.png $CONDA_DIR/lib/python2.7/site-packages/notebook/static/base/images
 
 USER $NB_USER
 
