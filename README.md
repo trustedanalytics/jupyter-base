@@ -22,7 +22,7 @@ docker run  --env IPYTHON_OPTS="--ip='*' " -p 8889:8888  tapatk/jupyter
 ```
 This will run the notebook and bind to all IP address inside the container and map host port 8889 to container port 8888.
 
-The python installation is local to **/home/tap** so any new python packages that might need to be installed won't require sudo to run.
+The python installation is local to **/home/vcap** so any new python packages that might need to be installed won't require sudo to run.
 
 The following package are pre-installed:
 - pip

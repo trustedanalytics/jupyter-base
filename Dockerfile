@@ -49,9 +49,9 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.9.0/tini &
     mv tini /usr/local/bin/tini && \
     chmod +x /usr/local/bin/tini
 
-# Create tap user with UID=1000 and in the 'users' group
+# Create vcap user with UID=1000 and in the 'users' group
 ENV SHELL /bin/bash
-ENV NB_USER tap
+ENV NB_USER vcap
 ENV NB_UID 1000
 RUN useradd -m -s /bin/bash -d /home/$NB_USER -N -u $NB_UID $NB_USER
 ENV CONDA_DIR /opt/anaconda2
@@ -67,7 +67,7 @@ RUN cd /tmp && \
 
 ENV PATH $CONDA_DIR/bin:$PATH
    
-# Setup tap home directory
+# Setup vcap home directory
 RUN mkdir /home/$NB_USER/work && \
     mkdir /home/$NB_USER/.jupyter && \
     mkdir /home/$NB_USER/.local && \
