@@ -9,4 +9,5 @@ matplotlib
 jupyter
 scipy
 scikit-learn
+pyorient
 trustedanalytics

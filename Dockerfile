@@ -8,7 +8,7 @@ RUN apt-get update \
     && apt-get -y upgrade 
 
 RUN apt-get install -yq --no-install-recommends --fix-missing \
-    locales software-properties-common build-essential \
+    locales software-properties-common build-essential python-qt4 libxext6 \
     vim-tiny unzip bzip2 tar sudo wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
