@@ -4,14 +4,12 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ARG PYTHON_VERSION=2.7.10
 
-RUN apt-get update \
-    && apt-get -y upgrade 
+RUN apt-get update && \
+    apt-get -y upgrade 
 
 RUN apt-get install -yq --no-install-recommends --fix-missing \
     locales software-properties-common build-essential python-qt4 libxext6 \
-    vim-tiny unzip bzip2 tar sudo wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    vim.tiny unzip bzip2 tar wget 
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -35,9 +33,7 @@ RUN \
     echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections  && \
     DEBIAN_FRONTEND=noninteractive  apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default  && \
     echo "===> clean up..."  && \
-    rm -rf /var/cache/oracle-jdk8-installer  && \
-    apt-get clean  && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/cache/oracle-jdk8-installer
 
 
 # define default command
@@ -60,10 +56,10 @@ RUN mkdir -p $CONDA_DIR && chown $NB_USER $CONDA_DIR
 USER $NB_USER
 # Download and Install Anaconda2
 RUN cd /tmp && \
-    wget --quiet https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda2-4.0.0-Linux-x86_64.sh && \
-    echo "ae312143952ca00e061a656c2080e0e4fd3532721282ba8e2978177cad71a5f0 *Anaconda2-4.0.0-Linux-x86_64.sh" | sha256sum -c - && \
-    bash Anaconda2-4.0.0-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Anaconda2-4.0.0-Linux-x86_64.sh
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-4.0.5-Linux-x86_64.sh && \
+    echo "42dac45eee5e58f05f37399adda45e85 *Miniconda2-4.0.5-Linux-x86_64.sh" | md5sum -c - && \
+    bash Miniconda2-4.0.5-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda2-4.0.5-Linux-x86_64.sh
 
 ENV PATH $CONDA_DIR/bin:$PATH
    
@@ -89,16 +85,26 @@ CMD ["start-notebook.sh"]
 COPY assets/requirements.txt $HOME/
 COPY assets/tapmenu/ $HOME/tapmenu
 RUN mkdir -p $HOME/jupyter && ls -la $HOME
+RUN conda install jupyter
 RUN jupyter-nbextension install $HOME/tapmenu  && jupyter-nbextension enable tapmenu/main 
 
 # This logo gets displayed within our default notebooks
 COPY assets/TAP-logo.png $CONDA_DIR/lib/python2.7/site-packages/notebook/static/base/images
 
+
+# Final apt cleanup
+RUN apt-get -yq autoremove && \
+    apt-get -yq clean && \
+    conda clean -y --all && \
+    rm -rf /var/lib/apt/lists/*
+
+
 USER $NB_USER
 
-RUN conda clean -y --all && \
-    conda install pip && \
-    pip install trustedanalytics
+RUN conda install pip && \
+    pip install trustedanalytics && \
+    conda clean -y --all
+
 
 RUN mkdir -p $HOME/.jupyter/nbconfig
 
