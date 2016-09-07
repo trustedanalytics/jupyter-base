@@ -9,7 +9,7 @@ RUN apt-get update && \
 
 RUN apt-get install -yq --no-install-recommends --fix-missing \
     locales software-properties-common build-essential python-qt4 libxext6 \
-    vim.tiny unzip bzip2 tar wget 
+    vim.tiny unzip tar wget 
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -93,7 +93,8 @@ COPY assets/TAP-logo.png $CONDA_DIR/lib/python2.7/site-packages/notebook/static/
 
 
 # Final apt cleanup
-RUN apt-get -yq autoremove && \
+RUN apt-get purge -y python3 && \
+    apt-get -yq autoremove && \
     apt-get -yq clean && \
     conda clean -y --all && \
     rm -rf /var/lib/apt/lists/*
