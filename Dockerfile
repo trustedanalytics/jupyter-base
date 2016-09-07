@@ -93,18 +93,14 @@ COPY assets/TAP-logo.png $CONDA_DIR/lib/python2.7/site-packages/notebook/static/
 
 
 # Final apt cleanup
-RUN apt-get purge -y python3 && \
+RUN apt-get purge -y python3.4 && \
     apt-get -yq autoremove && \
     apt-get -yq clean && \
-    conda clean -y --all && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    conda clean -y --all
 
 
 USER $NB_USER
-
-RUN conda install pip && \
-    pip install trustedanalytics && \
-    conda clean -y --all
 
 
 RUN mkdir -p $HOME/.jupyter/nbconfig
