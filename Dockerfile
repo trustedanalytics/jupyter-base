@@ -93,7 +93,8 @@ COPY assets/TAP-logo.png $CONDA_DIR/lib/python2.7/site-packages/notebook/static/
 
 
 # Final apt cleanup
-RUN apt-get -yq autoremove && \
+RUN apt-get purge -y python3 && \
+    apt-get -yq autoremove && \
     apt-get -yq clean && \
     conda clean -y --all && \
     rm -rf /var/lib/apt/lists/*
