@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get -y upgrade 
 
 RUN apt-get install -yq --no-install-recommends --fix-missing \
-    locales software-properties-common build-essential python-qt4 libxext6 \
+    locales build-essential python-qt4 libxext6 \
     vim.tiny unzip tar wget 
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
