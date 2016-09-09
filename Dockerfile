@@ -56,9 +56,9 @@ RUN mkdir -p $CONDA_DIR && chown $NB_USER $CONDA_DIR
 USER $NB_USER
 # Download and Install Anaconda2
 RUN cd /tmp && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-4.0.5-Linux-x86_64.sh && \
-    echo "42dac45eee5e58f05f37399adda45e85 Miniconda2-4.0.5-Linux-x86_64.sh" | md5sum -c - && \
-    bash Miniconda2-4.0.5-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh && \
+    echo "b2af3b9ff39c4a4a812f50cecbafcda6 Miniconda2-4.1.11-Linux-x86_64.sh" | md5sum -c - && \
+    bash Miniconda2-4.1.11-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda2-*x86_64.sh
 
 ENV PATH $CONDA_DIR/bin:$PATH
