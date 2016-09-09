@@ -77,7 +77,6 @@ EXPOSE 8888
 WORKDIR $HOME/jupyter
 COPY assets/start-notebook.sh /usr/local/bin/
 COPY assets/jupyter_notebook_config.py /home/$NB_USER/.jupyter/
-RUN chown -R $NB_USER:users /home/$NB_USER/
 ENTRYPOINT ["tini", "--"]
 CMD ["start-notebook.sh"]
 
