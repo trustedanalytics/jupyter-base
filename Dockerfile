@@ -83,6 +83,7 @@ CMD ["start-notebook.sh"]
 # Copy all files before switching users
 COPY assets/requirements.txt $HOME/
 COPY assets/tapmenu/ $HOME/tapmenu
+RUN chown -R $NB_USER:users /home/$NB_USER/jupyter
 RUN mkdir -p $HOME/jupyter && ls -la $HOME
 RUN conda install jupyter
 
