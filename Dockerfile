@@ -56,10 +56,10 @@ RUN mkdir -p $CONDA_DIR && chown $NB_USER $CONDA_DIR
 USER $NB_USER
 # Download and Install Anaconda2
 RUN cd /tmp && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-4.0.5-Linux-x86_64.sh && \
-    echo "42dac45eee5e58f05f37399adda45e85 *Miniconda2-4.0.5-Linux-x86_64.sh" | md5sum -c - && \
-    bash Miniconda2-4.0.5-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda2-4.0.5-Linux-x86_64.sh
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh && \
+    echo "b2af3b9ff39c4a4a812f50cecbafcda6 Miniconda2-4.1.11-Linux-x86_64.sh" | md5sum -c - && \
+    bash Miniconda2-4.1.11-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda2-*x86_64.sh
 
 ENV PATH $CONDA_DIR/bin:$PATH
    
@@ -77,15 +77,16 @@ EXPOSE 8888
 WORKDIR $HOME/jupyter
 COPY assets/start-notebook.sh /usr/local/bin/
 COPY assets/jupyter_notebook_config.py /home/$NB_USER/.jupyter/
-RUN chown -R $NB_USER:users /home/$NB_USER/
 ENTRYPOINT ["tini", "--"]
 CMD ["start-notebook.sh"]
 
 # Copy all files before switching users
 COPY assets/requirements.txt $HOME/
 COPY assets/tapmenu/ $HOME/tapmenu
+RUN chown -R $NB_USER:users /home/$NB_USER/jupyter
 RUN mkdir -p $HOME/jupyter && ls -la $HOME
 RUN conda install jupyter
+
 RUN jupyter-nbextension install $HOME/tapmenu  && jupyter-nbextension enable tapmenu/main 
 
 # This logo gets displayed within our default notebooks
@@ -93,15 +94,14 @@ COPY assets/TAP-logo.png $CONDA_DIR/lib/python2.7/site-packages/notebook/static/
 
 
 # Final apt cleanup
-RUN apt-get purge -y python3.4 && \
+RUN apt-get purge -y 'python3.4*' && \
     apt-get -yq autoremove && \
     apt-get -yq clean && \
     rm -rf /var/lib/apt/lists/* && \
     conda clean -y --all
-
+    
 
 USER $NB_USER
 
 
 RUN mkdir -p $HOME/.jupyter/nbconfig
-
