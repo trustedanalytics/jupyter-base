@@ -8,8 +8,7 @@ RUN apt-get update && \
     apt-get -y upgrade 
 
 RUN apt-get install -yq --no-install-recommends --fix-missing \
-    locales software-properties-common build-essential python-qt4 libxext6 \
-    vim.tiny unzip tar wget 
+    bzip2 locales vim.tiny unzip tar wget
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -40,10 +39,9 @@ RUN \
 CMD ["java"]
 
 # Install Tini
-RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.9.0/tini && \
-    echo "faafbfb5b079303691a939a747d7f60591f2143164093727e870b289a44d9872 *tini" | sha256sum -c - && \
-    mv tini /usr/local/bin/tini && \
-    chmod +x /usr/local/bin/tini
+ADD https://github.com/krallin/tini/releases/download/v0.10.0/tini /usr/local/bin/
+RUN chmod +x /usr/local/bin/tini
+
 
 # Create vcap user with UID=1000 and in the 'users' group
 ENV SHELL /bin/bash
@@ -53,13 +51,13 @@ RUN useradd -m -s /bin/bash -d /home/$NB_USER -N -u $NB_UID $NB_USER
 ENV CONDA_DIR /opt/anaconda2
 RUN mkdir -p $CONDA_DIR && chown $NB_USER $CONDA_DIR
 
+ADD https://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh /tmp/
+
+RUN bash /tmp/Miniconda2-4.1.11-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    chown -R $NB_USER:users $CONDA_DIR && \
+    rm -rf /tmp/Miniconda2-*x86_64.sh
+
 USER $NB_USER
-# Download and Install Anaconda2
-RUN cd /tmp && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh && \
-    echo "b2af3b9ff39c4a4a812f50cecbafcda6 Miniconda2-4.1.11-Linux-x86_64.sh" | md5sum -c - && \
-    bash Miniconda2-4.1.11-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda2-*x86_64.sh
 
 ENV PATH $CONDA_DIR/bin:$PATH
    
