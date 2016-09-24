@@ -104,7 +104,7 @@ CMD ["start-notebook.sh"]
 # Copy all files before switching users
 USER $NB_USER
 COPY assets/tapmenu/ $HOME/tapmenu
-RUN conda install jupyter
+RUN conda install curl jupyter
 
 
 # This logo gets displayed within our default notebooks
