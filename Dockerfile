@@ -30,19 +30,13 @@ RUN locale-gen en_US en_US.UTF-8
 ENV dpkg-reconfigure locales
 
 
-# Add webupd8 repository to install JDK 1.8
+# Add jessie-backports repository to install JDK 1.8
 RUN \
-    echo "===> add webupd8 repository..." && \
-    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list && \
-    echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 && \
+    echo "===> add jessie-backports repository ..." && \
+    echo "deb http://ftp.de.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/openjdk-8-jdk.list && \
     apt-get update && \
     echo "===> install Java" && \
-    echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
-    apt-get install -yq --no-install-recommends --fix-missing oracle-java8-installer oracle-java8-set-default && \
-    echo "===> clean up..." && \
-    rm -rf /var/cache/oracle-jdk8-installer
+    apt-get install -yq --no-install-recommends --fix-missing openjdk-8-jdk 
 
 
 # define default command
